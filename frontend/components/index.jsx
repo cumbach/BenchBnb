@@ -8,19 +8,35 @@ var Index = React.createClass({
     return ({benches: BenchStore.all()});
   },
   componentDidMount: function(){
-    BenchStore.addListener(this._onChange);
-    // ApiUtil.fetchBenches();
+    this.benchToken = BenchStore.addListener(this._onChange);
   },
   _onChange: function(){
     this.setState({benches: BenchStore.all()});
   },
   componentWillUnmount: function(){
-    BenchStore.removeListener(this._onChange);
+    this.benchToken.remove();
+  },
+  goToShow: function(bench, e){
+    console.log(bench.id);
+    this.props.history.pushState(null, 'bench/' + bench.id);
+
+    // this.history.pushState(null, 'bench/' + )
   },
   render: function(){
+    var benches = [];
+    var that = this;
+    if (typeof this.state.benches !== 'undefined') {
+      this.state.benches.map(function(bench, idx){
+        benches.push(<div onClick={that.goToShow.bind(that, bench)}
+                          key={idx}>{bench.description}
+                     </div>);
+      });
+    }
     return(
       <div>
-        <div>In the index</div>
+        <br/>
+        <div>Index:</div>
+        <div>{benches}</div>
       </div>
     );
   }

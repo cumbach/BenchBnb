@@ -12,10 +12,18 @@ var resetBenches = function(benches){
   _benches = benches;
 };
 
+var addBench = function (bench){
+  _benches.push(bench);
+};
+
 BenchStore.__onDispatch = function (payload) {
 switch(payload.actionType) {
   case BenchConstants.BENCHES_RECEIVED:
-    var result = resetBenches(payload.benches);
+    resetBenches(payload.benches);
+    BenchStore.__emitChange();
+    break;
+  case BenchConstants.CREATE_BENCH:
+    addBench(payload.bench);
     BenchStore.__emitChange();
     break;
   }
